@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Invisible Text
 // @namespace    https://thao.pw
-// @version      0.3
+// @version      0.4
 // @description  FB Messenger invisible text
 // @author       T-Rekt
 // @match        https://*.facebook.com/*
