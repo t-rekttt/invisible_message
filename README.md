@@ -19,6 +19,6 @@ The tool will be hooking into your Facebook messenger's React component to suppo
 
 ## How to use
 - Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
-- Install my userscript from [here](https://t-rekt.us/invisibleMessenger.user.js)
+- Install my userscript from [here](https://github.com/t-rekttt/invisible_message/raw/main/invisibleMessage.user.js)
 - Turn off your Facebook/Messenger tab and open it back again (to reflect the changes)
 - When you need to encode a message, add ">" at the beginning of the message. Example: *>Hello*
