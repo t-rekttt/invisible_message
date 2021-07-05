@@ -5,6 +5,7 @@
 // @description  FB Messenger invisible text
 // @author       T-Rekt
 // @match        https://*.facebook.com/*
+// @match        https://*.messenger.com/*
 // @grant        none
 // @run-at       document-idle
 // ==/UserScript==
