@@ -5,6 +5,8 @@ This is a tool (userscript) for encoding/decoding Facebook Messenger messages to
 
 (Thanks to zws for the zero width characters table: https://github.com/zws-im/tools)
 
+You're free to re-use the source code, but please keep the credit
+
 ## How does it work?
 The tool will be hooking into your Facebook messenger's React component to support 2 main features:
 - Encode your message into invisible messages (on demand)
