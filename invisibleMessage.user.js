@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Invisible Text
 // @namespace    https://thao.pw
-// @version      0.4
+// @version      0.5
 // @description  FB Messenger invisible text
 // @author       T-Rekt
 // @match        https://*.facebook.com/*
@@ -144,54 +144,16 @@
   };
 
   requireLazy(
-    [
-      "MWChatBubbleBAF.bs",
-      "MWChatBubbleSolid.bs",
-      "MWChatOutgoingMessageDefaultRenderer.bs",
-      "MqttProtocolClient",
-    ],
-    (BAF, solid, outgoing, protocolClient) => {
-      // Reply
-      const makeOrigBAF = BAF.make;
-      BAF.make = function (a) {
-        if (a?.content?.props?.children?.props?.text) {
-          // a.content.props.children.props.text = "Patched reply message";
+    ["MWV2ChatText.bs", "MqttProtocolClient"],
+    (MWV2ChatText, protocolClient) => {
+      const MWV2ChatTextMakeOrig = MWV2ChatText.make;
 
-          let text = a.content.props.children.props.text;
+      MWV2ChatText.make = function (a) {
+        let text = a?.message?.g;
 
-          if (checkEncode(text))
-            a.content.props.children.props.text = decode(text);
-        }
+        if (checkEncode(text)) a.message.g = decode(text);
 
-        return makeOrigBAF.apply(this, arguments);
-      };
-
-      // Incoming
-      const makeOrigSolid = solid.make;
-      solid.make = function (a) {
-        if (a?.content?.props?.text) {
-          // a.content.props.text = "Patched incoming message";
-
-          let text = a.content.props.text;
-
-          if (checkEncode(text)) a.content.props.text = decode(text);
-        }
-
-        return makeOrigSolid.apply(this, arguments);
-      };
-
-      // Outgoing
-      const makeOrigOutGoing = outgoing.make;
-      outgoing.make = function (a) {
-        if (a?.children?.props?.text) {
-          // a.children.props.text = "Patched outgoing message";
-
-          let text = a.children.props.text;
-
-          if (checkEncode(text)) a.children.props.text = decode(text);
-        }
-
-        return makeOrigOutGoing.apply(this, arguments);
+        return MWV2ChatTextMakeOrig.apply(this, arguments);
       };
 
       // Message publish
@@ -214,7 +176,7 @@
 
               if (!payload || !payload.text) return task;
 
-              if (payload.text.length > 1 && payload.text[0] === '>') {
+              if (payload.text.length > 1 && payload.text[0] === ">") {
                 payload.text = encode(payload.text.substr(1));
               }
 
