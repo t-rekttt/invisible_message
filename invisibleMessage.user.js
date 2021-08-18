@@ -7,7 +7,7 @@
 // @match        https://*.facebook.com/*
 // @match        https://*.messenger.com/*
 // @grant        none
-// @run-at       document-idle
+// @run-at       document-start
 // ==/UserScript==
 
 (function () {
