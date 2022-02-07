@@ -151,7 +151,7 @@
       MWV2ChatText.make = function (a) {
         let text = a?.message?.g;
 
-        if (checkEncode(text)) a.message.g = decode(text);
+        if (checkEncode(text)) a.message.g = `[Encrypted]: ${decode(text)}`;
 
         return MWV2ChatTextMakeOrig.apply(this, arguments);
       };
