@@ -134,7 +134,9 @@
   };
 
   const checkEncode = (s) => {
-    if (s[0] != PADDING) return false;
+    //console.log(s);
+
+    if (s?.[0] != PADDING) return false;
 
     s = s.substr(1);
 
@@ -146,12 +148,16 @@
   requireLazy(
     ["MWV2ChatText.bs", "MqttProtocolClient"],
     (MWV2ChatText, protocolClient) => {
+      console.log({ MWV2ChatText, protocolClient });
+
       const MWV2ChatTextMakeOrig = MWV2ChatText.make;
 
       MWV2ChatText.make = function (a) {
-        let text = a?.message?.g;
+        let text = a?.message?.text;
 
-        if (checkEncode(text)) a.message.g = `[Encrypted]: ${decode(text)}`;
+        //console.log(a);
+
+        if (checkEncode(text)) a.message.text = `[Encrypted]: ${decode(text)}`;
 
         return MWV2ChatTextMakeOrig.apply(this, arguments);
       };
