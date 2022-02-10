@@ -21,7 +21,8 @@ The tool will be hooking into your Facebook messenger's React component to suppo
 ## Features
 - No manual interaction required (no manual scripting/injection into dev console, blah blah,...just install once and use forever)
 - Easy to use
-- Fully invisible when you turn off the tool, fully invisible on mobile devices
+- Sent messages remain fully invisible when you turn off the tool, fully invisible on mobile devices
+- v0.8: Now with inline hidden messages
 
 ## How to use
 - Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
