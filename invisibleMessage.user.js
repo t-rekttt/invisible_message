@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Invisible Text
 // @namespace    https://thao.pw
-// @version      0.7
+// @version      0.8
 // @description  FB Messenger invisible text
 // @author       T-Rekt
 // @match        https://*.facebook.com/*
@@ -153,9 +153,10 @@
       MWV2ChatText.make = function (a) {
         let text = a?.message?.text;
 
-        //console.log(a);
-
-        if (checkEncode(text)) a.message.text = a.message.text.replace(encodedPattern, ` [Encrypted] ${decode(text)} [/Encrypted] `);
+        if (checkEncode(text)) {
+          a.message.isAdminMessage = true;
+          a.message.text = 'Encrypted message: ' + a.message.text.replace(encodedPattern, `<${decode(text)}>`);
+        }
 
         return MWV2ChatTextMakeOrig.apply(this, arguments);
       };
