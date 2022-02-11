@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Invisible Text
 // @namespace    https://thao.pw
-// @version      0.8
+// @version      0.9
 // @description  FB Messenger invisible text
 // @author       T-Rekt
 // @match        https://*.facebook.com/*
@@ -47,7 +47,7 @@
     "\u{e007f}",
   ];
 
-  const shouldEncodePattern = />(.+?)</;
+  const shouldEncodePattern = / *>(.+?)< */;
   const encodedPattern = new RegExp(`${PADDING_START}([${CHARS.join('')}]+?)${PADDING_END}`);
 
   const CHARS_MAP = CHARS.reduce((curr, val, i) => {
@@ -155,7 +155,7 @@
 
         if (checkEncode(text)) {
           a.message.isAdminMessage = true;
-          a.message.text = 'Encrypted message: ' + a.message.text.replace(encodedPattern, `<${decode(text)}>`);
+          a.message.text = 'Encrypted message: ' + a.message.text.replace(encodedPattern, `>${decode(text)}<`);
         }
 
         return MWV2ChatTextMakeOrig.apply(this, arguments);
@@ -184,7 +184,7 @@
               let matches = shouldEncodePattern.exec(payload.text);
 
               if (payload.text.length > 1 && matches) {
-                payload.text = payload.text.replace(shouldEncodePattern, encode(matches[1]));
+                payload.text = payload.text.replace(shouldEncodePattern, ' ' + encode(matches[1]));
               }
 
               task.payload = JSON.stringify(payload);
