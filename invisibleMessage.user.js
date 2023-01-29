@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Invisible Text
 // @namespace    https://thao.pw
-// @version      0.6
+// @version      0.10
 // @description  FB Messenger invisible text
 // @author       T-Rekt
 // @match        https://*.facebook.com/*
@@ -13,11 +13,12 @@
 (function () {
   // Thank you zws
 
-  const PADDING = "\u200c";
+  const PADDING_START = "\u200c";
+  const PADDING_END = "\u{e0061}";
 
   const CHARS = [
     // "\u200d",
-    "\u{e0061}",
+    // "\u{e0061}",
     "\u{e0062}",
     "\u{e0063}",
     "\u{e0064}",
@@ -45,6 +46,9 @@
     "\u{e007a}",
     "\u{e007f}",
   ];
+
+  const shouldEncodePattern = / *>(.+?)< */;
+  const encodedPattern = new RegExp(`${PADDING_START}([${CHARS.join('')}]+?)${PADDING_END}`);
 
   const CHARS_MAP = CHARS.reduce((curr, val, i) => {
     curr[val] = i;
@@ -98,7 +102,7 @@
 
     let res = converted.map(charEncode);
 
-    return PADDING + res.join("");
+    return PADDING_START + res.join("") + PADDING_END;
   };
 
   const decodeChar = (encodedChar) => {
@@ -116,7 +120,7 @@
   };
 
   const decode = (s) => {
-    s = s.substr(1);
+    s = encodedPattern.exec(s)[1];
 
     let curr = [];
     let res = "";
@@ -136,13 +140,7 @@
   const checkEncode = (s) => {
     //console.log(s);
 
-    if (s?.[0] != PADDING) return false;
-
-    s = s.substr(1);
-
-    for (let c of s) if (CHARS_MAP[c] === undefined) return false;
-
-    return true;
+    return encodedPattern.exec(s);
   };
 
   requireLazy(
@@ -155,9 +153,10 @@
       MWV2ChatText.make = function (a) {
         let text = a?.message?.text;
 
-        //console.log(a);
-
-        if (checkEncode(text)) a.message.text = `[Encrypted]: ${decode(text)}`;
+        if (checkEncode(text)) {
+          //a.message.isAdminMessage = true;
+          a.message.text = 'Encrypted message: ' + a.message.text.replace(encodedPattern, `>${decode(text)}<`);
+        }
 
         return MWV2ChatTextMakeOrig.apply(this, arguments);
       };
@@ -182,8 +181,10 @@
 
               if (!payload || !payload.text) return task;
 
-              if (payload.text.length > 1 && payload.text[0] === ">") {
-                payload.text = encode(payload.text.substr(1));
+              let matches = shouldEncodePattern.exec(payload.text);
+
+              if (payload.text.length > 1 && matches) {
+                payload.text = payload.text.replace(shouldEncodePattern, ' ' + encode(matches[1]));
               }
 
               task.payload = JSON.stringify(payload);

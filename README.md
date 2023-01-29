@@ -21,10 +21,11 @@ The tool will be hooking into your Facebook messenger's React component to suppo
 ## Features
 - No manual interaction required (no manual scripting/injection into dev console, blah blah,...just install once and use forever)
 - Easy to use
-- Fully invisible when you turn off the tool, fully invisible on mobile devices
+- Sent messages remain fully invisible when you turn off the tool, fully invisible on mobile devices
+- v0.8: Now with inline hidden messages
 
 ## How to use
 - Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
-- Install my userscript from [here](https://github.com/t-rekttt/invisible_message/raw/main/invisibleMessage.user.js)
+- Install my userscript from [here](https://github.com/t-rekttt/invisible_message/raw/hidden-between-text/invisibleMessage.user.js)
 - Turn off your Facebook/Messenger tab and open it back again (to reflect the changes)
 - When you need to encode a message, add ">" at the beginning of the message. Example: *>Hello*
