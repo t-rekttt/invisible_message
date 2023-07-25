@@ -23,6 +23,7 @@ The tool will be hooking into your Facebook messenger's React component to suppo
 - Easy to use
 - Sent messages remain fully invisible when you turn off the tool, fully invisible on mobile devices
 - v0.8: Now with inline hidden messages
+- v0.10: Now you can put hidden text between other visible texts. Syntax changed to: `> text <`
 
 ## How to use
 - Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
