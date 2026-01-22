@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Invisible Text
+// @name         FB Invisible Message
 // @namespace    https://thao.pw
-// @version      0.10
+// @version      2.0
 // @description  FB Messenger invisible text
 // @author       T-Rekt
 // @match        https://*.facebook.com/*
@@ -144,64 +144,38 @@
   };
 
   requireLazy(
-    ["MWV2ChatText.bs", "MqttProtocolClient"],
-    (MWV2ChatText, protocolClient) => {
-      console.log({ MWV2ChatText, protocolClient });
+    ["MWUnvaultedText", "MAWSecureComposerText"],
+    (MWUnvaultedText, MAWSecureComposerText) => {
+    //   console.log({ MWUnvaultedText, MAWSecureComposerText });
 
-      const MWV2ChatTextMakeOrig = MWV2ChatText.make;
+      const useMWUnvaultedTextOrig = MWUnvaultedText.useMWUnvaultedText;
 
-      MWV2ChatText.make = function (a) {
-        let text = a?.message?.text;
+      MWUnvaultedText.useMWUnvaultedText = function(isSecure, vaultedText) {
+        let text = useMWUnvaultedTextOrig(isSecure, vaultedText);
 
         if (checkEncode(text)) {
-          //a.message.isAdminMessage = true;
-          a.message.text = 'Encrypted message: ' + a.message.text.replace(encodedPattern, `>${decode(text)}<`);
+            text = `Encrypted message: ${text.replace(encodedPattern, `>${decode(text)}<`)}`;
         }
 
-        return MWV2ChatTextMakeOrig.apply(this, arguments);
+        // console.log({ text });
+        return text;
       };
 
-      // Message publish
-      const publishOrig = protocolClient.prototype.publish;
-      protocolClient.prototype.publish = function () {
-        let b = arguments[1];
+      const getTextFromEditorStateOrig = MAWSecureComposerText.getTextFromEditorState;
 
-        if (b && b.includes('\\\\\\"text\\\\\\":')) {
-          (function () {
-            b = JSON.parse(b);
+      MAWSecureComposerText.getTextFromEditorState = function(editorState) {
+        // console.log({ editorState });
 
-            if (!b || !b.payload) return;
+        let text = getTextFromEditorStateOrig.call(this, editorState);
+        
+        let matches = shouldEncodePattern.exec(text);
 
-            let payload = JSON.parse(b.payload);
-
-            if (!payload || !payload.tasks) return;
-
-            payload.tasks = payload.tasks.map((task) => {
-              let payload = JSON.parse(task.payload);
-
-              if (!payload || !payload.text) return task;
-
-              let matches = shouldEncodePattern.exec(payload.text);
-
-              if (payload.text.length > 1 && matches) {
-                payload.text = payload.text.replace(shouldEncodePattern, ' ' + encode(matches[1]));
-              }
-
-              task.payload = JSON.stringify(payload);
-
-              return task;
-            });
-
-            b.payload = JSON.stringify(payload);
-
-            b = JSON.stringify(b);
-          })();
-
-          arguments[1] = b;
+        if (text.length > 1 && matches) {
+            text = text.replace(shouldEncodePattern, ` ${encode(matches[1])}`);
         }
 
-        return publishOrig.apply(this, arguments);
-      };
+        return text;
+      }
     }
   );
 })();
