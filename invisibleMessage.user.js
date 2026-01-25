@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FB Invisible Message
 // @namespace    https://thao.pw
-// @version      4.5
+// @version      4.6
 // @description  FB Messenger invisible text
 // @author       T-Rekt
 // @match        https://*.facebook.com/*
@@ -160,11 +160,8 @@
   }
 
   requireLazy(
-    ["MAWVault", "LexicalText"],
-    (MAWVault, LexicalText) => {
-      const MAWVaultVaultOrig = MAWVault.vault;
-      const MAWVaultUnvaultOrig = MAWVault.unvault;
-
+    ["MWUnvaultedText", "MAWSecureComposerText", "LexicalText"],
+    (MWUnvaultedText, MAWSecureComposerText, LexicalText) => {
       const LexicalTextRootTextContentOrig = LexicalText.$rootTextContent;
 
       LexicalText.$rootTextContent = function () {
