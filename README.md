@@ -31,5 +31,6 @@ The tool will be hooking into your Facebook messenger's React component to suppo
 - Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 - Install my userscript from [here](https://github.com/t-rekttt/invisible_message/raw/hidden-between-text/invisibleMessage.user.js)
 - Turn off your Facebook/Messenger tab and open it back again (to reflect the changes)
-- When you need to encode a message, add ">" at the beginning of the message. Example: *>Hello*
+- When you need to encode a message, put the meessage between "> <". Example: *This message is not hidden >this message is hidden<*
+
 
