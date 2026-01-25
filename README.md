@@ -24,9 +24,12 @@ The tool will be hooking into your Facebook messenger's React component to suppo
 - Sent messages remain fully invisible when you turn off the tool, fully invisible on mobile devices
 - v0.8: Now with inline hidden messages
 - v0.10: Now you can put hidden text between other visible texts. Syntax changed to: `> text <`
+- v2.0: Updated to make it work again after Facebook updated new messaging components
+- v4.6: Make it work for non E2EE message threads
 
 ## How to use
 - Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 - Install my userscript from [here](https://github.com/t-rekttt/invisible_message/raw/hidden-between-text/invisibleMessage.user.js)
 - Turn off your Facebook/Messenger tab and open it back again (to reflect the changes)
 - When you need to encode a message, add ">" at the beginning of the message. Example: *>Hello*
+
