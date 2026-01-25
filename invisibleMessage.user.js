@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FB Invisible Message
 // @namespace    https://thao.pw
-// @version      2.0
+// @version      4.5
 // @description  FB Messenger invisible text
 // @author       T-Rekt
 // @match        https://*.facebook.com/*
@@ -143,39 +143,60 @@
     return encodedPattern.exec(s);
   };
 
+  const patch = (text) => {
+    try {
+      let matches = shouldEncodePattern.exec(text);
+
+      // console.log({ text, matches });
+
+      if (text.length > 1 && matches) {
+        text = text.replace(shouldEncodePattern, ` ${encode(matches[1])}`);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    return text;
+  }
+
   requireLazy(
-    ["MWUnvaultedText", "MAWSecureComposerText"],
-    (MWUnvaultedText, MAWSecureComposerText) => {
-    //   console.log({ MWUnvaultedText, MAWSecureComposerText });
+    ["MAWVault", "LexicalText"],
+    (MAWVault, LexicalText) => {
+      const MAWVaultVaultOrig = MAWVault.vault;
+      const MAWVaultUnvaultOrig = MAWVault.unvault;
+
+      const LexicalTextRootTextContentOrig = LexicalText.$rootTextContent;
+
+      LexicalText.$rootTextContent = function () {
+        return patch(LexicalTextRootTextContentOrig.apply(this, arguments));
+      }
+
+      const getTextFromEditorStateOrig = MAWSecureComposerText.getTextFromEditorState;
+
+      MAWSecureComposerText.getTextFromEditorState = function () {
+        // console.log({ editorState });
+
+        return patch(getTextFromEditorStateOrig.apply(this, arguments));
+      }
+
+      //   console.log({ MWUnvaultedText, MAWSecureComposerText });
 
       const useMWUnvaultedTextOrig = MWUnvaultedText.useMWUnvaultedText;
 
-      MWUnvaultedText.useMWUnvaultedText = function(isSecure, vaultedText) {
+      MWUnvaultedText.useMWUnvaultedText = function (isSecure, vaultedText) {
         let text = useMWUnvaultedTextOrig(isSecure, vaultedText);
 
         if (checkEncode(text)) {
+          try {
             text = `Encrypted message: ${text.replace(encodedPattern, `>${decode(text)}<`)}`;
+          } catch (err) {
+            console.log(err);
+          }
         }
 
         // console.log({ text });
         return text;
       };
-
-      const getTextFromEditorStateOrig = MAWSecureComposerText.getTextFromEditorState;
-
-      MAWSecureComposerText.getTextFromEditorState = function(editorState) {
-        // console.log({ editorState });
-
-        let text = getTextFromEditorStateOrig.call(this, editorState);
-        
-        let matches = shouldEncodePattern.exec(text);
-
-        if (text.length > 1 && matches) {
-            text = text.replace(shouldEncodePattern, ` ${encode(matches[1])}`);
-        }
-
-        return text;
-      }
     }
   );
 })();
